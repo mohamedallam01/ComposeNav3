@@ -76,4 +76,13 @@ dependencies {
     implementation(libs.koin.android)
     implementation(libs.koin.compose)
     implementation(libs.koin.compose.viewmodel)
+
+    //Material3
+    implementation(libs.androidx.material3)
+    implementation(libs.androidx.compose.material3.window.size.class1)
+    implementation(libs.androidx.compose.material3.adaptive.navigation.suite)
+
+    //Material
+    implementation(libs.androidx.compose.material.icons.core)
+    implementation(libs.androidx.compose.material.icons.extended)
 }
