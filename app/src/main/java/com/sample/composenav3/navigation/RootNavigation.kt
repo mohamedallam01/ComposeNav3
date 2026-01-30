@@ -1,5 +1,9 @@
 package com.sample.composenav3.navigation
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
@@ -27,6 +31,24 @@ fun RootNavigation() {
             rememberSaveableStateHolderNavEntryDecorator(),
             rememberViewModelStoreNavEntryDecorator()
         ),
+        transitionSpec = {
+            slideInHorizontally(
+                animationSpec = tween(300),
+                initialOffsetX = { fullWidth -> fullWidth }
+            ) togetherWith slideOutHorizontally(
+                animationSpec = tween(300),
+                targetOffsetX = { fullWidth -> -fullWidth }
+            )
+        },
+        popTransitionSpec = {
+            slideInHorizontally(
+                animationSpec = tween(300),
+                initialOffsetX = { fullWidth -> -fullWidth }
+            ) togetherWith slideOutHorizontally(
+                animationSpec = tween(300),
+                targetOffsetX = { fullWidth -> fullWidth }
+            )
+        },
         entryProvider = entryProvider {
             entry<AppNavKey.Login> {
                 LoginScreen(
