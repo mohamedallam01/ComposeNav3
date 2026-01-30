@@ -1,4 +1,4 @@
-package com.tech5.composenav3.di
+package com.sample.composenav3.di
 
 import org.koin.dsl.module
 

@@ -1,6 +1,5 @@
 package com.sample.composenav3.navigation
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
@@ -10,11 +9,10 @@ import androidx.navigation3.ui.NavDisplay
 import com.sample.composenav3.ui.MainScreen
 import com.sample.composenav3.ui.auth.login.LoginScreen
 import com.sample.composenav3.ui.auth.register.RegisterScreen
-import com.sample.composenav3.ui.splash.SplashScreen
 
 @Composable
 fun RootNavigation() {
-    val rootBackStack = rememberNavBackStack(AppNavKey.Splash)
+    val rootBackStack = rememberNavBackStack(AppNavKey.Login)
 
     fun navigateToMainAndClearBackStack() {
         while (rootBackStack.isNotEmpty()) {
@@ -30,17 +28,7 @@ fun RootNavigation() {
             rememberViewModelStoreNavEntryDecorator()
         ),
         entryProvider = entryProvider {
-            entry<AppNavKey.Splash> {
-                Log.d("RootNavigation", "from splash")
-                SplashScreen(
-                    onNavigateToLogin = {
-                        rootBackStack.add(AppNavKey.Login)
-                    }
-                )
-            }
-
             entry<AppNavKey.Login> {
-                Log.d("RootNavigation", "from login")
                 LoginScreen(
                     onNavigateToRegister = {
                         rootBackStack.add(AppNavKey.Register)
