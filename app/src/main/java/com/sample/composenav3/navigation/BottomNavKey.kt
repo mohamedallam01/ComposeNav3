@@ -8,6 +8,7 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation3.runtime.NavKey
+import com.sample.composenav3.ui.main.MainConstants
 import kotlinx.serialization.Serializable
 
 sealed interface BottomNavKey : NavKey {
@@ -17,19 +18,19 @@ sealed interface BottomNavKey : NavKey {
     @Serializable
     data object Home : BottomNavKey {
         override val icon: ImageVector = Icons.Default.Home
-        override val label: String = "Home"
+        override val label: String = MainConstants.LABEL_HOME
     }
 
     @Serializable
     data object Profile : BottomNavKey {
         override val icon: ImageVector = Icons.Default.Person
-        override val label: String = "Profile"
+        override val label: String = MainConstants.LABEL_PROFILE
     }
 
     @Serializable
     data object MultiPane : BottomNavKey {
         override val icon: ImageVector = Icons.Default.Settings
-        override val label: String = "MultiPane"
+        override val label: String = MainConstants.LABEL_MULTI_PANE
     }
 
     companion object {
