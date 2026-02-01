@@ -14,4 +14,5 @@ object MainConstants {
 
     // Details screen
     const val CD_BACK = "Back"
+    const val EMPTY_BOX = "Empty Box"
 }

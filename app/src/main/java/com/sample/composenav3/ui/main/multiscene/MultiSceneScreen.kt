@@ -1,98 +1,70 @@
 package com.sample.composenav3.ui.main.multiscene
 
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
+import androidx.compose.material3.adaptive.navigation3.ListDetailSceneStrategy
+import androidx.compose.material3.adaptive.navigation3.rememberListDetailSceneStrategy
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation3.runtime.entryProvider
-import androidx.navigation3.runtime.rememberNavBackStack
-import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
-import androidx.window.core.layout.WindowSizeClass
-import com.sample.composenav3.navigation.MultiSceneNavKey
+import com.sample.composenav3.R
+import com.sample.composenav3.navigation.AppNavKey
+import com.sample.composenav3.navigation.BottomNavKey
+import com.sample.composenav3.ui.main.MainConstants
+import com.sample.composenav3.ui.main.details.DetailsScreen
+import com.sample.composenav3.ui.main.home.HomeScreen
 
+@OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 fun MultiSceneScreen() {
-    val backStack = rememberNavBackStack(MultiSceneNavKey.List)
-    val windowAdaptiveInfo = currentWindowAdaptiveInfo()
-    // Check if the window is wide enough for multi-pane layout (840dp is the expanded breakpoint)
-    val isExpanded = windowAdaptiveInfo.windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_EXPANDED_LOWER_BOUND)
+    val backStack = remember { mutableStateListOf<Any>(BottomNavKey.Home) }
+    val strategy = rememberListDetailSceneStrategy<Any>()
 
-    if (isExpanded) {
-        // Multi-pane layout for large screens
-        // Show list and detail side by side
-        Row(modifier = Modifier.fillMaxSize()) {
-            androidx.compose.foundation.layout.Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxHeight()
-            ) {
-                ListPane(
-                    onItemClick = { itemId ->
-                        backStack.add(MultiSceneNavKey.Detail(itemId))
+    NavDisplay(
+        backStack = backStack,
+        onBack = { backStack.removeLastOrNull() },
+        sceneStrategy = strategy,
+        entryProvider = entryProvider {
+            entry<BottomNavKey.Home>(
+                metadata = ListDetailSceneStrategy.listPane(
+                    detailPlaceholder = {
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Image(
+                                modifier = Modifier.size(120.dp),
+                                painter = painterResource(R.drawable.ic_empty_box),
+                                contentDescription = MainConstants.EMPTY_BOX
+                            )
+                        }
                     }
+                )
+            ) {
+                HomeScreen(
+                    onNavigateToDetails = { itemId ->
+                        val destination = AppNavKey.Details(itemId)
+                        backStack.add(destination)
+                    },
                 )
             }
 
-            // Show detail pane if there's a detail in the back stack
-            val detailKey = backStack.filterIsInstance<MultiSceneNavKey.Detail>().lastOrNull()
-            if (detailKey != null) {
-                androidx.compose.foundation.layout.Box(
-                    modifier = Modifier
-                        .weight(2f)
-                        .fillMaxHeight()
-                ) {
-                    DetailPane(
-                        itemId = detailKey.itemId,
-                        onNavigateBack = {
-                            backStack.removeLastOrNull()
-                        }
-                    )
-                }
+            entry<AppNavKey.Details>(
+                metadata = ListDetailSceneStrategy.detailPane()
+            ) { key ->
+                DetailsScreen(itemId = key.itemId, onNavigateBack = {
+                    backStack.removeLastOrNull()
+                })
             }
-        }
-    } else {
-        // Single pane layout for phones
-        NavDisplay(
-            backStack = backStack,
-            entryDecorators = listOf(
-                rememberSaveableStateHolderNavEntryDecorator(),
-                rememberViewModelStoreNavEntryDecorator()
-            ),
-            entryProvider = entryProvider {
-                entry<MultiSceneNavKey.List> {
-                    ListPane(
-                        onItemClick = { itemId ->
-                            backStack.add(MultiSceneNavKey.Detail(itemId))
-                        }
-                    )
-                }
-
-                entry<MultiSceneNavKey.Detail> { key ->
-                    DetailPane(
-                        itemId = key.itemId,
-                        onNavigateBack = {
-                            backStack.removeLastOrNull()
-                        }
-                    )
-                }
-            }
-        )
-    }
-}
-
-@Composable
-fun ListPane(onItemClick: (String) -> Unit) {
-    // List UI will go here - just navigation logic for now
-    // Call onItemClick(itemId) when an item is clicked
-}
-
-@Composable
-fun DetailPane(itemId: String, onNavigateBack: () -> Unit) {
-    // Detail UI will go here - just navigation logic for now
-    // itemId is the selected item
-    // Call onNavigateBack() to go back to list
+        },
+    )
 }

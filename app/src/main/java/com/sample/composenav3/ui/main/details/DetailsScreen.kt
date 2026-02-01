@@ -17,23 +17,26 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.sample.composenav3.ui.main.MainConstants
 import org.koin.compose.viewmodel.koinViewModel
-import org.koin.core.parameter.parametersOf
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailsScreen(
     itemId: String,
     onNavigateBack: () -> Unit,
-    viewModel: DetailsViewModel = koinViewModel(parameters = { parametersOf(itemId) })
+    viewModel: DetailsViewModel = koinViewModel()
 ) {
     val item by viewModel.item.collectAsState()
 
+    LaunchedEffect(itemId) {
+        viewModel.getItemById(itemId)
+    }
     Scaffold(
         topBar = {
             TopAppBar(
