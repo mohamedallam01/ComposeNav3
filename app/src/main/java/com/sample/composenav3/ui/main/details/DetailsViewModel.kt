@@ -6,16 +6,15 @@ import com.sample.composenav3.data.Item
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
 class DetailsViewModel(
-    repo: FakeRepo,
-    itemId: String
+    private val repo: FakeRepo,
 ) : ViewModel() {
-
     private val _item = MutableStateFlow<Item?>(null)
     val item: StateFlow<Item?> = _item.asStateFlow()
 
-    init {
-        _item.value = repo.getItemById(itemId)
+    fun getItemById(itemId: String) {
+        _item.update { repo.getItemById(itemId) }
     }
 }

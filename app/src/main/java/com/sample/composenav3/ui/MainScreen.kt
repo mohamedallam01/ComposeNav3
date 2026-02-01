@@ -1,6 +1,11 @@
 package com.sample.composenav3.ui
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -127,6 +132,18 @@ fun MainScreen() {
                 entry<BottomNavKey.MultiPane> {
                     MultiSceneScreen()
                 }
+            },
+            transitionSpec = {
+                (fadeIn() + scaleIn(initialScale = 0.92f)) togetherWith
+                        (fadeOut() + scaleOut(targetScale = 0.92f))
+            },
+            popTransitionSpec = {
+                (fadeIn() + scaleIn(initialScale = 0.92f)) togetherWith
+                        (fadeOut() + scaleOut(targetScale = 0.92f))
+            },
+            predictivePopTransitionSpec = {
+                (fadeIn() + scaleIn(initialScale = 0.92f)) togetherWith
+                        (fadeOut() + scaleOut(targetScale = 0.92f))
             }
         )
     }

@@ -33,19 +33,19 @@ fun RootNavigation() {
         ),
         transitionSpec = {
             slideInHorizontally(
-                animationSpec = tween(300),
+                animationSpec = tween(200),
                 initialOffsetX = { fullWidth -> fullWidth }
             ) togetherWith slideOutHorizontally(
-                animationSpec = tween(300),
+                animationSpec = tween(200),
                 targetOffsetX = { fullWidth -> -fullWidth }
             )
         },
         popTransitionSpec = {
             slideInHorizontally(
-                animationSpec = tween(300),
+                animationSpec = tween(200),
                 initialOffsetX = { fullWidth -> -fullWidth }
             ) togetherWith slideOutHorizontally(
-                animationSpec = tween(300),
+                animationSpec = tween(200),
                 targetOffsetX = { fullWidth -> fullWidth }
             )
         },
