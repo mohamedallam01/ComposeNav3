@@ -5,7 +5,6 @@ object MainConstants {
     // Bottom navigation
     const val LABEL_HOME = "Home"
     const val LABEL_PROFILE = "Profile"
-    const val LABEL_MULTI_PANE = "MultiPane"
 
     // Profile screen
     const val PROFILE_NAME = "Mohamed Allam"

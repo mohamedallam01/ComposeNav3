@@ -25,10 +25,7 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
-import com.sample.composenav3.navigation.AppNavKey
 import com.sample.composenav3.navigation.BottomNavKey
-import com.sample.composenav3.ui.main.details.DetailsScreen
-import com.sample.composenav3.ui.main.home.HomeScreen
 import com.sample.composenav3.ui.main.multiscene.MultiSceneScreen
 import com.sample.composenav3.ui.main.profile.ProfileScreen
 
@@ -37,7 +34,6 @@ fun MainScreen() {
 
     val homeBackStack = rememberNavBackStack(BottomNavKey.Home)
     val profileBackStack = rememberNavBackStack(BottomNavKey.Profile)
-    val multiPaneBackStack = rememberNavBackStack(BottomNavKey.MultiPane)
 
     var currentKey by rememberSaveable(stateSaver = BottomNavKey.stateSaver) {
         mutableStateOf(BottomNavKey.Home)
@@ -45,7 +41,6 @@ fun MainScreen() {
     val currentBackStack: NavBackStack<out NavKey> = when (currentKey) {
         BottomNavKey.Home -> homeBackStack
         BottomNavKey.Profile -> profileBackStack
-        BottomNavKey.MultiPane -> multiPaneBackStack
     }
 
     fun <T : NavKey> resetBackStack(backStack: NavBackStack<T>) {
@@ -59,7 +54,6 @@ fun MainScreen() {
             currentBottomKey = currentKey,
             homeBackStackSize = homeBackStack.size,
             profileBackStackSize = profileBackStack.size,
-            multiPaneBackStackSize = multiPaneBackStack.size,
             onSetHomeKey = {
                 currentKey = BottomNavKey.Home
             },
@@ -69,9 +63,6 @@ fun MainScreen() {
             onPopProfileBackStack = {
                 profileBackStack.removeLastOrNull()
             },
-            onPopMultiPaneBackStack = {
-                multiPaneBackStack.removeLastOrNull()
-            }
         )
     }
 
@@ -89,7 +80,6 @@ fun MainScreen() {
                                 when (key) {
                                     BottomNavKey.Home -> resetBackStack(homeBackStack)
                                     BottomNavKey.Profile -> resetBackStack(profileBackStack)
-                                    BottomNavKey.MultiPane -> resetBackStack(multiPaneBackStack)
                                 }
                             }
                         },
@@ -109,28 +99,11 @@ fun MainScreen() {
             ),
             entryProvider = entryProvider {
                 entry<BottomNavKey.Home> {
-                    HomeScreen(
-                        onNavigateToDetails = { itemId ->
-                            homeBackStack.add(AppNavKey.Details(itemId))
-                        }
-                    )
-                }
-
-                entry<AppNavKey.Details> { key ->
-                    DetailsScreen(
-                        itemId = key.itemId,
-                        onNavigateBack = {
-                            currentBackStack.removeLastOrNull()
-                        }
-                    )
+                    MultiSceneScreen()
                 }
 
                 entry<BottomNavKey.Profile> {
                     ProfileScreen()
-                }
-
-                entry<BottomNavKey.MultiPane> {
-                    MultiSceneScreen()
                 }
             },
             transitionSpec = {
@@ -157,11 +130,9 @@ private fun onBackPressed(
     currentBottomKey: BottomNavKey,
     homeBackStackSize: Int,
     profileBackStackSize: Int,
-    multiPaneBackStackSize: Int,
     onSetHomeKey: () -> Unit,
     onPopHomeBackStack: () -> Unit,
     onPopProfileBackStack: () -> Unit,
-    onPopMultiPaneBackStack: () -> Unit
 ) {
     when (currentBottomKey) {
         BottomNavKey.Home -> {
@@ -173,14 +144,6 @@ private fun onBackPressed(
         BottomNavKey.Profile -> {
             if (profileBackStackSize > 1) {
                 onPopProfileBackStack()
-            } else {
-                onSetHomeKey()
-            }
-        }
-
-        BottomNavKey.MultiPane -> {
-            if (multiPaneBackStackSize > 1) {
-                onPopMultiPaneBackStack()
             } else {
                 onSetHomeKey()
             }
